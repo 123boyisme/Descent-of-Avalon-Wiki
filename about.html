@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Descent of Avalon Wiki</title>
+  <meta name="description" content="Descent of Avalon — Static Wiki" />
+  <style>
+    :root{
+      --bg:#0f1216;        /* page background */
+      --panel:#151a21;     /* cards/panels */
+      --muted:#a7b0bf;     /* secondary text */
+      --text:#e6edf3;      /* primary text */
+      --acc:#7dd3fc;       /* accent */
+      --link:#93c5fd;      /* link */
+      --border:#263041;    /* borders */
+      --sidebar-w: 280px;  /* sidebar width */
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font:16px/1.55 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      display:grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      grid-template-rows: auto 1fr;
+      grid-template-areas:
+        "sidebar header"
+        "sidebar main";
+      min-height:100vh;
+    }
+
+    /* Header */
+    header{
+      grid-area:header;
+      position:sticky; top:0; z-index:50;
+      background:linear-gradient(180deg, rgba(21,26,33,.95), rgba(21,26,33,.85));
+      border-bottom:1px solid var(--border);
+    }
+    .hdr-wrap{display:flex;align-items:center;gap:12px;padding:10px 14px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.3px}
+    .logo .dot{width:10px;height:10px;border-radius:50%;background:var(--acc);box-shadow:0 0 12px var(--acc)}
+    .spacer{flex:1}
+    .search{position:relative;max-width:520px;flex:1}
+    .search input{width:100%;background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:10px 14px;outline:none}
+    .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--border);background:var(--panel);color:var(--text);padding:9px 12px;border-radius:10px;cursor:pointer}
+    .btn:hover{border-color:#344255}
+    .hamburger{display:none}
+
+    /* Sidebar */
+    aside{
+      grid-area:sidebar; position:sticky; top:0; height:100dvh; overflow:auto;
+      border-right:1px solid var(--border); background:var(--panel);
+    }
+    .side-wrap{padding:16px}
+    .brand{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+    .brand img{width:28px;height:28px;border-radius:8px}
+    nav h4{margin:18px 10px 10px;font-size:.9rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+    .nav{list-style:none; padding:0; margin:0}
+    .nav a{display:flex;align-items:center;gap:10px;padding:9px 12px;margin:2px 0;border-radius:10px;color:var(--text);text-decoration:none}
+    .nav a:hover{background:#1b2230}
+    .nav a.active{background:#0f1729; border:1px solid var(--border)}
+    .pill{margin-left:auto;font-size:.8rem;color:var(--muted);background:#0d1320;border:1px solid var(--border);padding:2px 8px;border-radius:999px}
+
+    /* Main */
+    main{grid-area:main; padding:22px;}
+    .container{max-width:1100px;margin:0 auto}
+    .card{background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:18px}
+
+    /* Wiki styles */
+    .breadcrumbs{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:.9rem;margin-bottom:12px}
+    .breadcrumbs a{color:var(--link);text-decoration:none}
+    h1,h2,h3{line-height:1.2}
+    h1{font-size:2rem;margin:0 0 8px}
+    h2{font-size:1.2rem;color:var(--muted);margin:0 0 16px}
+    .wiki-grid{display:grid;grid-template-columns:1fr;gap:16px}
+    .wiki-section{padding:16px;border:1px solid var(--border);border-radius:12px}
+    .wiki-section h3{margin:0 0 8px}
+    .meta{display:flex;flex-wrap:wrap;gap:12px;font-size:.9rem;color:var(--muted);margin:10px 0 0}
+    .tag{border:1px solid var(--border);padding:2px 8px;border-radius:999px;background:#0d1320}
+
+    .toc{list-style:none;margin:0;padding:0}
+    .toc li{margin:6px 0}
+    .toc a{color:var(--link);text-decoration:none}
+
+    a{color:var(--link)}
+
+    /* Footer */
+    footer{margin-top:24px;color:var(--muted)}
+
+    /* Responsive */
+    @media (max-width: 900px){
+      body{grid-template-columns: 1fr; grid-template-areas:
+        "header"
+        "main";
+      }
+      aside{position:fixed; left:0; top:0; height:100dvh; width:min(88vw, 320px); transform:translateX(-100%); transition:.25s ease; z-index:60}
+      aside.open{transform:none; box-shadow: 0 10px 30px rgba(0,0,0,.5)}
+      .hamburger{display:inline-flex}
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside id="sidebar">
+    <div class="side-wrap">
+      <div class="brand">
+        <img src="https://dummyimage.com/64x64/1b2230/ffffff&text=DoA" alt="DoA" />
+        <div>
+          <div style="font-weight:800">Descent of Avalon</div>
+          <div style="font-size:.9rem; color:var(--muted)">Community Wiki</div>
+        </div>
+      </div>
+
+      <nav>
+        <h4>Navigation</h4>
+        <ul class="nav">
+          <li><a href="index.html" data-match="index.html">🏠 Home</a></li>
+          <li><a href="lore.html" data-match="lore.html">📜 Lore <span class="pill">new</span></a></li>
+          <li><a href="characters.html" data-match="characters.html">👤 Characters</a></li>
+          <li><a href="factions.html" data-match="factions.html">🏰 Factions</a></li>
+          <li><a href="items.html" data-match="items.html">🧭 Items & Relics</a></li>
+          <li><a href="rules.html" data-match="rules.html">📐 Rules & Systems</a></li>
+        </ul>
+
+        <h4>Resources</h4>
+        <ul class="nav">
+          <li><a href="maps.html" data-match="maps.html">🗺️ Maps</a></li>
+          <li><a href="faq.html" data-match="faq.html">❓ FAQ</a></li>
+          <li><a href="about.html" data-match="about.html">ℹ️ About</a></li>
+        </ul>
+      </nav>
+    </div>
+  </aside>
+
+  <!-- Header -->
+  <header>
+    <div class="hdr-wrap">
+      <button class="btn hamburger" id="openSidebar">☰ Menu</button>
+      <div class="logo"><span class="dot"></span> DoA Wiki</div>
+      <div class="spacer"></div>
+      <div class="search">
+        <input id="filterInput" placeholder="Quick filter on this page… (e.g. 'Mythia')" />
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main>
+    <div class="container">
+      <nav class="breadcrumbs">
+        <a href="index.html">Home</a>
+        <span>›</span>
+        <span>Welcome</span>
+      </nav>
+
+      <div class="card">
+        <h1>Welcome to the Descent of Avalon Wiki</h1>
+        <h2>Static HTML version (no Ruby/Jekyll needed)</h2>
+
+        <div class="wiki-grid">
+          <!-- Left: Getting started -->
+          <section class="wiki-section">
+            <h3>Getting Started</h3>
+            <ol>
+              <li><strong>Save this file as <code>index.html</code></strong> in a folder (e.g., <code>DoA-Wiki</code>).</li>
+              <li>To make a new page, <strong>duplicate this file</strong> and rename it, e.g., <code>lore.html</code>.</li>
+              <li>Edit the main content to fit your new page. The sidebar and header are already included.</li>
+              <li>Host anywhere (GitHub Pages works great) since it's just HTML/CSS/JS.</li>
+            </ol>
+            <div class="meta">
+              <span class="tag">No build tools</span>
+              <span class="tag">Mobile friendly</span>
+              <span class="tag">Dark theme</span>
+            </div>
+          </section>
+
+          <!-- Right: Table of contents demo -->
+          <section class="wiki-section">
+            <h3>On this page</h3>
+            <ul class="toc" id="toc"></ul>
+          </section>
+        </div>
+
+        <!-- Example content blocks -->
+        <section class="wiki-section" id="intro">
+          <h3>Intro</h3>
+          <p>
+            This template is designed to feel like a classic wiki: a persistent left sidebar with section links and a main article area.
+            No Ruby, no Jekyll — just copy pages and edit.
+          </p>
+        </section>
+
+        <section class="wiki-section" id="lore">
+          <h3>Lore (Example)</h3>
+          <p>
+            Create <code>lore.html</code> and paste the same layout. Replace the article sections with your world-building.
+            You can add subsections for <em>Mythia Crystals</em>, <em>Three Crescents Collective</em>, regions, timelines, and more.
+          </p>
+          <ul>
+            <li><a href="#mythia">Mythia Crystals</a></li>
+            <li><a href="#tcc">Three Crescents Collective</a></li>
+            <li><a href="#timeline">History Timeline</a></li>
+          </ul>
+        </section>
+
+        <section class="wiki-section" id="mythia">
+          <h3>Mythia Crystals</h3>
+          <p>Placeholder text. Move this to <code>lore.html</code> later and expand.</p>
+        </section>
+
+        <section class="wiki-section" id="tcc">
+          <h3>Three Crescents Collective</h3>
+          <p>Placeholder text. Outline ranks, renown thresholds, and key NPCs.</p>
+        </section>
+
+        <section class="wiki-section" id="timeline">
+          <h3>History Timeline</h3>
+          <p>Placeholder timeline section. Use headings to auto-build the TOC on each page.</p>
+        </section>
+
+        <footer>
+          <p>© <span id="year"></span> Descent of Avalon. Static wiki template.</p>
+        </footer>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // --- Active link in sidebar based on pathname ---
+    (function(){
+      const here = location.pathname.split('/').pop() || 'index.html';
+      document.querySelectorAll('aside .nav a').forEach(a=>{
+        if(a.dataset.match === here){ a.classList.add('active'); }
+      });
+    })();
+
+    // --- Mobile sidebar toggle ---
+    (function(){
+      const openBtn = document.getElementById('openSidebar');
+      const sidebar = document.getElementById('sidebar');
+      openBtn?.addEventListener('click', ()=> sidebar.classList.toggle('open'));
+      // Close on outside click (mobile)
+      document.addEventListener('click', (e)=>{
+        if(window.matchMedia('(max-width: 900px)').matches){
+          if(!sidebar.contains(e.target) && e.target !== openBtn){ sidebar.classList.remove('open'); }
+        }
+      });
+    })();
+
+    // --- Build simple in-page TOC from h3 headings ---
+    (function(){
+      const toc = document.getElementById('toc');
+      if(!toc) return;
+      const heads = Array.from(document.querySelectorAll('main h3'));
+      heads.forEach(h=>{
+        const id = h.id || h.textContent.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+        h.id = id;
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = '#' + id; a.textContent = h.textContent;
+        li.appendChild(a); toc.appendChild(li);
+      });
+    })();
+
+    // --- Quick in-page filter ---
+    (function(){
+      const input = document.getElementById('filterInput');
+      const sections = Array.from(document.querySelectorAll('.wiki-section'));
+      input?.addEventListener('input', ()=>{
+        const q = input.value.trim().toLowerCase();
+        sections.forEach(sec=>{
+          const hit = sec.textContent.toLowerCase().includes(q);
+          sec.style.display = hit ? '' : 'none';
+        })
+      });
+    })();
+
+    // --- Year ---
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
